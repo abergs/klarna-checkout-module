@@ -465,7 +465,7 @@ class WC_Gateway_Klarna_Shortcodes {
 
 							<?php if ( 1 === count( $available_methods ) ) {
 								$method = current( $available_methods );
-								echo wp_kses_post( wc_cart_totals_shipping_method_label( $method ) ); ?>
+								echo wp_kses_post( $method->get_label() ); ?>
 								<input type="hidden" name="shipping_method[<?php echo esc_attr( $index ); ?>]"
 								       data-index="<?php echo esc_attr( $index ); ?>"
 								       id="shipping_method_<?php echo esc_attr( $index ); ?>"
@@ -545,20 +545,16 @@ class WC_Gateway_Klarna_Shortcodes {
 		global $woocommerce;
 
 		ob_start();
-		foreach ( $woocommerce->cart->get_applied_coupons() as $coupon ) { ?>
+		foreach ( $woocommerce->cart->get_coupons() as $code => $coupon ) { ?>
 			<tr class="kco-applied-coupon">
 				<td>
-					<?php if ( strstr( strtoupper( $coupon ), 'WC_POINTS_REDEMPTION' ) ) {
-						// WooCommerce points and rewards compatibility
-						echo esc_html( __( 'Points redemption', 'woocommerce-gateway-klarna' ) );
-					} else { ?>
-						<?php _e( 'Coupon: ', 'woocommerce-gateway-klarna' ); ?><?php echo $coupon; ?>
-					<?php } ?>
-					<a class="kco-remove-coupon" data-coupon="<?php echo $coupon; ?>"
+					<?php echo apply_filters( 'woocommerce_cart_totals_coupon_label', esc_html( __( 'Coupon:',
+							'woocommerce' ) . ' ' . $coupon->code ), $coupon ); ?>
+					<a class="kco-remove-coupon" data-coupon="<?php echo $coupon->code; ?>"
 					   href="#"><?php _e( '(remove)', 'woocommerce-gateway-klarna' ); ?></a>
 				</td>
 				<td class="kco-rightalign">
-					-<?php echo wc_price( $woocommerce->cart->get_coupon_discount_amount( $coupon, $woocommerce->cart->display_cart_ex_tax ) ); ?></td>
+					-<?php echo wc_price( $woocommerce->cart->get_coupon_discount_amount( $code, $woocommerce->cart->display_cart_ex_tax ) ); ?></td>
 			</tr>
 		<?php }
 

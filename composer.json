@@ -1,9 +1,5 @@
 {
-	"name": "abergs/klarna-checkout-module",
-	"type": "wordpress-plugin",
-	"version": "2.0.0",
 	"require": {
-		"composer/installers": "v1.0.6",
 		"klarna/php-xmlrpc": "4.0",
 		"klarna/checkout": "4.0",
 		"klarna/kco_rest": "^2.1"
